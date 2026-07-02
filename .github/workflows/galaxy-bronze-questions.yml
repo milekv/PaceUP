@@ -1,0 +1,91 @@
+name: Create Galaxy Bronze Questions
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  discussions: write
+
+jobs:
+  create:
+    name: Create bronze Q&A discussions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create discussions
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const name = context.repo.repo;
+
+            const data = await github.graphql(`
+              query($owner: String!, $name: String!) {
+                repository(owner: $owner, name: $name) {
+                  id
+                  discussionCategories(first: 20) {
+                    nodes {
+                      id
+                      isAnswerable
+                    }
+                  }
+                }
+              }
+            `, { owner, name });
+
+            const category = data.repository.discussionCategories.nodes.find((item) => item.isAnswerable);
+            if (!category) {
+              throw new Error("No answerable discussion category found.");
+            }
+
+            const questions = [
+              {
+                title: "How should PaceUP handle duplicated activity saves?",
+                body: "If a user taps finish twice or the network retries an activity save, what should PaceUP do with the duplicated request?"
+              },
+              {
+                title: "What should count toward a weekly consistency quest?",
+                body: "PaceUP supports many activity types. Which completed actions should count toward a weekly consistency quest?"
+              },
+              {
+                title: "How should PaceUP summarize a completed strength workout?",
+                body: "After a strength workout is completed, which metrics should the summary prioritize?"
+              },
+              {
+                title: "What should a safe team preview show before joining?",
+                body: "Before a user joins a team, what information should be visible without exposing private member activity?"
+              },
+              {
+                title: "How should PaceUP explain unavailable analytics?",
+                body: "When analytics cannot be shown yet, what should PaceUP display so the screen still feels useful?"
+              },
+              {
+                title: "What should happen when a user leaves an event?",
+                body: "If a user leaves a local event or race-prep group, how should PaceUP handle related quests and visibility?"
+              }
+            ];
+
+            for (const question of questions) {
+              await github.graphql(`
+                mutation($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
+                  createDiscussion(input: {
+                    repositoryId: $repositoryId,
+                    categoryId: $categoryId,
+                    title: $title,
+                    body: $body
+                  }) {
+                    discussion {
+                      number
+                      url
+                    }
+                  }
+                }
+              `, {
+                repositoryId: data.repository.id,
+                categoryId: category.id,
+                title: question.title,
+                body: question.body
+              });
+            }
