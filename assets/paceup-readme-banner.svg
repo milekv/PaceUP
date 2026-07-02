@@ -1,0 +1,81 @@
+<svg width="1280" height="420" viewBox="0 0 1280 420" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="title desc">
+  <title id="title">PaceUp animated README banner</title>
+  <desc id="desc">Dark sport-tech banner with glowing route line, activity cards, and PaceUp headline.</desc>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1280" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#07111f"/>
+      <stop offset="0.46" stop-color="#0b1f2f"/>
+      <stop offset="1" stop-color="#102c3b"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="190" y1="340" x2="1040" y2="78" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#20f6a0"/>
+      <stop offset="0.45" stop-color="#36d7ff"/>
+      <stop offset="1" stop-color="#9d7cff"/>
+    </linearGradient>
+    <filter id="glow" x="-60%" y="-60%" width="220%" height="220%">
+      <feGaussianBlur stdDeviation="12" result="blur"/>
+      <feColorMatrix in="blur" type="matrix" values="0 0 0 0 0.1 0 0 0 0 0.92 0 0 0 0 0.68 0 0 0 0.65 0"/>
+      <feBlend in="SourceGraphic"/>
+    </filter>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="20" stdDeviation="28" flood-color="#000814" flood-opacity="0.5"/>
+    </filter>
+    <clipPath id="clip">
+      <rect width="1280" height="420" rx="32"/>
+    </clipPath>
+    <style>
+      .pulse { animation: pulse 2.7s ease-in-out infinite; transform-origin: center; }
+      .float { animation: float 5.5s ease-in-out infinite; }
+      .dash { stroke-dasharray: 16 18; animation: dash 18s linear infinite; }
+      .fade { animation: fade 3.2s ease-in-out infinite alternate; }
+      @keyframes pulse {
+        0%, 100% { opacity: .55; transform: scale(1); }
+        50% { opacity: 1; transform: scale(1.12); }
+      }
+      @keyframes float {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(-10px); }
+      }
+      @keyframes dash {
+        to { stroke-dashoffset: -420; }
+      }
+      @keyframes fade {
+        from { opacity: .42; }
+        to { opacity: .9; }
+      }
+    </style>
+  </defs>
+
+  <g clip-path="url(#clip)">
+    <rect width="1280" height="420" fill="url(#bg)"/>
+    <circle class="fade" cx="1110" cy="80" r="190" fill="#1fd18a" opacity="0.1"/>
+    <circle class="fade" cx="180" cy="360" r="220" fill="#38d9ff" opacity="0.1"/>
+    <path d="M-20 340C122 246 208 330 331 244C457 156 518 82 662 132C786 175 804 295 945 250C1065 211 1115 99 1305 144" stroke="url(#mint)" stroke-width="7" stroke-linecap="round" filter="url(#glow)" opacity="0.95"/>
+    <path class="dash" d="M-20 340C122 246 208 330 331 244C457 156 518 82 662 132C786 175 804 295 945 250C1065 211 1115 99 1305 144" stroke="#dffff4" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+    <g class="pulse" filter="url(#glow)">
+      <circle cx="326" cy="247" r="13" fill="#20f6a0"/>
+      <circle cx="665" cy="133" r="13" fill="#36d7ff"/>
+      <circle cx="944" cy="250" r="13" fill="#9d7cff"/>
+    </g>
+
+    <g filter="url(#soft)">
+      <rect x="790" y="86" width="328" height="210" rx="24" fill="#0d1a29" fill-opacity="0.78" stroke="#25445a"/>
+      <text x="828" y="136" fill="#92ffe1" font-family="Inter, Segoe UI, Arial" font-size="18" font-weight="700">DZISIAJ</text>
+      <text x="828" y="178" fill="#ffffff" font-family="Inter, Segoe UI, Arial" font-size="42" font-weight="800">+420 XP</text>
+      <text x="828" y="216" fill="#b8c9d9" font-family="Inter, Segoe UI, Arial" font-size="20">quest tygodnia</text>
+      <rect x="828" y="244" width="220" height="12" rx="6" fill="#1a3042"/>
+      <rect x="828" y="244" width="158" height="12" rx="6" fill="url(#mint)"/>
+    </g>
+
+    <g class="float" filter="url(#soft)">
+      <rect x="104" y="82" width="250" height="148" rx="22" fill="#0d1a29" fill-opacity="0.74" stroke="#24465d"/>
+      <text x="132" y="126" fill="#9ee2c2" font-family="Inter, Segoe UI, Arial" font-size="18" font-weight="700">SOLO PROGRESS</text>
+      <text x="132" y="170" fill="#ffffff" font-family="Inter, Segoe UI, Arial" font-size="34" font-weight="800">5:00 / km</text>
+      <text x="132" y="203" fill="#b8c9d9" font-family="Inter, Segoe UI, Arial" font-size="18">10K plan</text>
+    </g>
+
+    <text x="92" y="305" fill="#ffffff" font-family="Inter, Segoe UI, Arial" font-size="72" font-weight="900">PaceUp</text>
+    <text x="96" y="348" fill="#aee9d8" font-family="Inter, Segoe UI, Arial" font-size="24" font-weight="700">Twoje tempo. Twoi ludzie. Twój progres.</text>
+  </g>
+</svg>
