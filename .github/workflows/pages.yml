@@ -36,6 +36,8 @@ jobs:
         run: touch dist/.nojekyll
 
       - name: Publish to gh-pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd dist
           git init
