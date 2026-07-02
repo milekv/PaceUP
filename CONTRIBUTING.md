@@ -17,6 +17,8 @@ npm run lint
 npm run build
 ```
 
+For visible product changes, also use [docs/QA_CHECKLIST.md](docs/QA_CHECKLIST.md) before requesting or merging a review.
+
 ## Commit Style
 
 Use short, clear commit messages:
