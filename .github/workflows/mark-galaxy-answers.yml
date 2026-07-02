@@ -1,0 +1,46 @@
+name: Mark Galaxy Answers
+
+on:
+  workflow_dispatch:
+    inputs:
+      first_comment_id:
+        description: First discussion comment node ID
+        required: true
+        type: string
+      second_comment_id:
+        description: Second discussion comment node ID
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  discussions: write
+
+jobs:
+  mark:
+    name: Mark accepted answers
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Mark answers
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const ids = [
+              "${{ inputs.first_comment_id }}",
+              "${{ inputs.second_comment_id }}"
+            ];
+
+            for (const id of ids) {
+              await github.graphql(`
+                mutation($id: ID!) {
+                  markDiscussionCommentAsAnswer(input: { id: $id }) {
+                    discussion {
+                      number
+                      url
+                    }
+                  }
+                }
+              `, { id });
+            }
