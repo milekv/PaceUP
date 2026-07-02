@@ -1,0 +1,83 @@
+name: Create Galaxy Final Questions
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  discussions: write
+
+jobs:
+  create:
+    name: Create final Q&A discussions
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Create discussions
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const owner = context.repo.owner;
+            const name = context.repo.repo;
+
+            const data = await github.graphql(`
+              query($owner: String!, $name: String!) {
+                repository(owner: $owner, name: $name) {
+                  id
+                  discussionCategories(first: 20) {
+                    nodes {
+                      id
+                      isAnswerable
+                    }
+                  }
+                }
+              }
+            `, { owner, name });
+
+            const category = data.repository.discussionCategories.nodes.find((item) => item.isAnswerable);
+            if (!category) {
+              throw new Error("No answerable discussion category found.");
+            }
+
+            const questions = [
+              ["How should PaceUP rank suggested quests?", "Which signals should decide the order of suggested quests on the dashboard?"],
+              ["How should PaceUP handle profile sync conflicts?", "If local profile changes conflict with database values, which source should win?"],
+              ["What should PaceUP show for a new training plan?", "Which details should be visible before a user starts a training plan?"],
+              ["How should PaceUP handle team invitations?", "What should happen when a user receives, accepts, or ignores a team invitation?"],
+              ["How should PaceUP present plan difficulty?", "How should difficulty be described without discouraging beginners?"],
+              ["What should PaceUP do after a completed plan?", "What should the app suggest when a user completes every workout in a plan?"],
+              ["How should PaceUP handle hidden badges?", "Should locked badges be fully hidden or shown as silhouettes with hints?"],
+              ["What should PaceUP show in a lightweight activity feed?", "Which feed items are useful without overwhelming the dashboard?"],
+              ["How should PaceUP handle stale event data?", "What should the UI do if an event was changed or canceled?"],
+              ["How should PaceUP support beginner runners?", "Which product choices make running plans safer for beginners?"],
+              ["How should PaceUP avoid leaderboard pressure?", "How can social comparison stay motivating without discouraging users?"],
+              ["What should PaceUP include in release notes?", "Which changes deserve user-facing release notes?"],
+              ["How should PaceUP handle failed XP sync?", "What should happen when XP is earned locally but sync fails?"],
+              ["How should PaceUP show route privacy?", "When maps are added, how should route privacy be communicated?"],
+              ["What should PaceUP do with archived teams?", "How should archived or inactive teams appear in the product?"],
+              ["How should PaceUP guide first-time contributors?", "Which information helps a new contributor understand the project quickly?"]
+            ];
+
+            for (const [title, body] of questions) {
+              await github.graphql(`
+                mutation($repositoryId: ID!, $categoryId: ID!, $title: String!, $body: String!) {
+                  createDiscussion(input: {
+                    repositoryId: $repositoryId,
+                    categoryId: $categoryId,
+                    title: $title,
+                    body: $body
+                  }) {
+                    discussion {
+                      number
+                      url
+                    }
+                  }
+                }
+              `, {
+                repositoryId: data.repository.id,
+                categoryId: category.id,
+                title,
+                body
+              });
+            }
