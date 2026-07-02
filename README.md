@@ -13,6 +13,9 @@
 </p>
 
 <p align="center">
+  <a href="https://pace-up.bolt.host/">
+    <img alt="Live app" src="https://img.shields.io/badge/Live_App-pace--up.bolt.host-20f6a0?style=for-the-badge">
+  </a>
   <a href="https://github.com/milekv/PaceUP/actions/workflows/ci.yml">
     <img alt="CI" src="https://img.shields.io/github/actions/workflow/status/milekv/PaceUP/ci.yml?branch=main&label=CI&style=for-the-badge&color=20f6a0">
   </a>
@@ -24,127 +27,247 @@
 
 ---
 
-## Overview
+## O Projekcie
 
-**PaceUp** to aplikacja społecznościowo-treningowa dla aktywnych ludzi. Jej główna idea jest prosta: pomóc użytkownikowi budować aktywny styl życia samodzielnie albo razem z innymi.
+**PaceUp** to aplikacja społecznościowo-treningowa dla aktywnych ludzi. Łączy aktywność solo, aktywności grupowe, questy, XP, odznaki, plany treningowe, lokalne wydarzenia sportowe i analitykę postępów w jednym mobile-first doświadczeniu.
 
-To nie ma być kopia Stravy ani tylko licznik kilometrów. PaceUp ma dawać wartość nawet wtedy, gdy użytkownik jest sam: może zrobić aktywność solo, zdobyć XP, realizować plan, odblokować odznaki, analizować progres i dopiero później dołączać do ekip, wydarzeń albo aktywności grupowych.
+PaceUp nie jest kolejną kopią Stravy ani samym licznikiem kilometrów. Produkt ma działać nawet wtedy, gdy użytkownik dopiero zaczyna i nie ma jeszcze społeczności w okolicy: może wykonać trening solo, zdobyć XP, ukończyć quest, realizować plan, prowadzić dziennik aktywności i obserwować progres. Warstwa społecznościowa rozwija ten fundament przez ekipy, aktywności grupowe i wydarzenia.
 
-> Obecny kod repozytorium to profesjonalny frontend starter / MVP foundation. Pełna warstwa social, questów, backendu i analityki jest opisana jako kierunek rozwoju, a nie udawana jako gotowa produkcja.
+**Live app:** [pace-up.bolt.host](https://pace-up.bolt.host/)
 
-## Live
+## Filozofia Produktu
 
-```text
-https://milekv.github.io/PaceUP/
+PaceUp opiera się na dwóch trybach, które wzajemnie się uzupełniają:
+
+- **Progres solo** - użytkownik może trenować sam, realizować plany, zdobywać XP, odblokowywać odznaki i śledzić regularność.
+- **Aktywności społeczne** - użytkownik może tworzyć aktywności, dołączać do innych, budować ekipy i przygotowywać się do lokalnych wydarzeń sportowych.
+
+Główna zasada produktu: aplikacja musi dawać wartość od pierwszego dnia, nawet bez dużej społeczności. Społeczność jest wzmocnieniem progresu, nie warunkiem używania aplikacji.
+
+```mermaid
+flowchart LR
+  A["Aktywność solo"] --> B["XP + progres questa"]
+  B --> C["Odznaki + poziom"]
+  C --> D["Historia + analityka"]
+  D --> E["Kolejny trening / plan"]
+  E --> A
+  F["Aktywność grupowa"] --> B
+  G["Lokalne wydarzenie"] --> F
+  H["Ekipa"] --> F
 ```
 
-GitHub Pages jest przygotowany przez workflow `Deploy GitHub Pages`. Jeśli strona nie jest jeszcze widoczna, trzeba włączyć `Settings -> Pages -> Source: GitHub Actions`.
+## Funkcje
 
-## Co Już Jest W Repo
+### Logowanie i Onboarding
 
-| Obszar | Status | Szczegóły |
-| --- | --- | --- |
-| Frontend starter | Gotowe | React, TypeScript, Vite, ESLint |
-| Dashboard preview | Gotowe | Hero, metryki, target pace, tygodniowy wolumen |
-| Logika tempa | Gotowe | `pacePerKilometer`, `formatPace` |
-| CI | Gotowe | typecheck, lint, build |
-| GitHub Pages deploy | Gotowe technicznie | workflow z artifactem `dist` |
-| Dokumentacja projektu | Gotowe | architecture, product brief, roadmap, ADR |
-| Social features | Planowane | aktywności grupowe, ekipy, czat, check-in |
-| Backend / Supabase | Planowane | service layer, auth, RLS, migracje |
+- logowanie i rejestracja,
+- onboarding nowego użytkownika,
+- profil użytkownika,
+- preferencje aktywności,
+- przygotowanie pod tryb Supabase/Bolt Database.
 
-## Key Features
+### Ekran Startowy
 
-### Solo Progress
+- poziom użytkownika,
+- XP i progres do kolejnego poziomu,
+- streak / regularność,
+- szybkie akcje,
+- plan dnia,
+- aktywny plan treningowy,
+- quest tygodnia,
+- feed społecznościowy.
 
-- start aktywności solo,
-- zapis czasu, dystansu, tempa i notatki,
-- XP za aktywność,
-- mood / samopoczucie po treningu,
-- historia aktywności,
-- progres bez potrzeby czekania na innych użytkowników.
+### Progres Solo
+
+- aktywności solo,
+- zakończenie aktywności z podsumowaniem,
+- mood / samopoczucie,
+- notatki,
+- XP za ukończenie,
+- zapis do historii,
+- aktualizacja questów i analityki.
 
 ### Aktywności Grupowe
 
 - tworzenie aktywności,
-- dołączanie do treningów i wydarzeń,
-- szczegóły aktywności,
-- status aktywności,
+- dołączanie do aktywności,
+- szczegóły wydarzenia,
 - check-in,
-- czat dla uczestników.
+- status aktywności,
+- czat aktywności,
+- progres społecznościowy.
 
-### Questy I Gamifikacja
+### Typy Aktywności
 
-- XP,
-- poziomy,
-- questy dzienne i tygodniowe,
-- questy eventowe,
-- odznaki,
-- rarity,
-- level-up modal,
-- animacje nagród.
+PaceUp nie traktuje każdego ruchu tak samo. Dane są dopasowane do typu aktywności.
+
+| Typ aktywności | Dane | Uwagi |
+| --- | --- | --- |
+| Bieganie | dystans, czas, tempo, mood, notatki | Podstawowy typ dla planów biegowych |
+| Spacer | czas, opcjonalny dystans, mood, notatki | Niski próg wejścia dla regularności |
+| Rower | dystans, czas, średnia prędkość, mood, notatki | Osobne metryki względem biegania |
+| Trekking | dystans, czas, przewyższenia, trudność, mood | Aktywność outdoorowa |
+| Siłownia | typ treningu, partie, ćwiczenia, serie, powtórzenia, ciężar, RPE, objętość | Bez kilometrów i tempa; liczy się objętość treningowa |
+| Social / kawa | miejsce, godzina, opis, liczba osób | Aktywność społecznościowa bez presji sportowej |
+
+### Trening Siłowy
+
+Moduł siłowy jest traktowany jako osobny typ aktywności, a nie sztucznie dopasowany do kilometrów. PaceUp uwzględnia:
+
+- typ treningu, np. FBW, upper/lower, push/pull/legs, cardio, custom,
+- partie mięśniowe,
+- ćwiczenia,
+- serie,
+- powtórzenia,
+- ciężar,
+- opcjonalne RPE,
+- całkowitą objętość treningową.
 
 ### Plany Treningowe
 
-- plany biegowe,
-- plany siłowe,
-- plany zdrowia i regularnego ruchu,
-- dzienny trening do wykonania,
-- progres planu,
-- XP i odznaki za konsekwencję.
+PaceUp wspiera koncepcję planów treningowych w kilku kategoriach:
 
-### Lokalne Wydarzenia I Ekipy
+- **Bieganie** - First 5K, bieganie 3x w tygodniu, przygotowanie do 10K, powrót po przerwie.
+- **Siła** - Beginner FBW, upper/lower split, push pull legs, trening siłowy dla biegaczy.
+- **Zdrowie i ruch** - 20 minut ruchu dziennie, regularność tygodniowa, aktywny powrót.
+
+Plan może zawierać opis, poziom trudności, czas trwania, liczbę treningów w tygodniu, listę jednostek, progres, nagrody XP i odznaki.
+
+### Questy, XP i Odznaki
+
+Gamifikacja jest jednym z głównych mechanizmów retencji:
+
+- XP za aktywności,
+- poziomy,
+- questy dzienne, tygodniowe, eventowe i solo,
+- odznaki,
+- poziomy rzadkości,
+- level-up modal,
+- odblokowywanie odznak,
+- progres questów,
+- odporność na wielokrotne naliczanie XP dla tej samej akcji.
+
+System jest przygotowany pod event-driven progress, np.:
+
+- `solo_activity_completed`,
+- `strength_workout_completed`,
+- `plan_workout_completed`,
+- `group_activity_completed`,
+- `event_joined`,
+- `team_joined`.
+
+### Dziennik Aktywności
+
+- historia aktywności,
+- podsumowania ukończonych treningów,
+- filtrowanie po typie aktywności,
+- szczegóły treningu siłowego,
+- dane zależne od typu aktywności,
+- źródło aktywności, np. plan treningowy.
+
+### Analityka
+
+- liczba aktywności tygodniowo i miesięcznie,
+- minuty ruchu,
+- kilometry biegania, spaceru i roweru,
+- treningi siłowe,
+- objętość treningowa,
+- XP,
+- streak,
+- ulubiony typ aktywności,
+- progres aktywnego planu.
+
+### Lokalne Wydarzenia i Race Mode
 
 - lokalne wydarzenia sportowe,
+- karty wydarzeń,
 - race mode,
-- przygotowanie do zawodów,
-- ekipy pod wspólny cel,
-- statystyki ekip,
-- aktywności social, np. kawa, spacer, lekki ruch.
+- grupy przygotowujące się do wydarzeń,
+- questy powiązane z wydarzeniami.
 
-## Product Concept
+Zaawansowane GPS tracking, live route tracking i mapa trasy są częścią roadmapy.
 
-PaceUp łączy trzy warstwy:
+### Ekipy
 
-```mermaid
-flowchart LR
-  A["Solo progress"] --> D["PaceUp Core"]
-  B["Ludzie i ekipy"] --> D
-  C["Questy, XP, odznaki"] --> D
-  D --> E["Aktywny styl życia"]
-  D --> F["Lepsza regularność"]
-  D --> G["Widoczny progres"]
+- ekipy użytkowników,
+- karty ekip,
+- wspólne cele,
+- progres zespołu,
+- motywacja społecznościowa.
+
+### Profil i Ustawienia
+
+- avatar,
+- poziom,
+- XP,
+- statystyki,
+- odznaki,
+- historia,
+- analityka,
+- ustawienia konta,
+- prywatność,
+- powiadomienia,
+- bezpieczeństwo,
+- wylogowanie.
+
+### Warstwa Danych
+
+Architektura projektu jest przygotowywana pod tryb danych oparty o Supabase/Bolt Database:
+
+- service layer,
+- mock mode,
+- database mode,
+- typy danych,
+- migracje,
+- Row Level Security,
+- fallback dla stanu lokalnego w trybie mock.
+
+## Ścieżka Użytkownika
+
+```text
+Rejestracja / logowanie
+  -> Onboarding
+  -> Ekran startowy
+  -> Aktywność solo albo grupowa
+  -> Zakończenie aktywności
+  -> Nagroda XP
+  -> Progres questa
+  -> Odblokowanie odznaki
+  -> Historia
+  -> Analityka
+  -> Kolejny trening / progres planu
 ```
 
-Produkt ma działać w dwóch trybach:
+## Wiarygodny Progres
 
-- **Solo-first** - użytkownik ma wartość od pierwszego dnia, nawet bez znajomych w aplikacji.
-- **Social-ready** - gdy pojawiają się inni ludzie, dochodzą aktywności grupowe, ekipy, eventy i wspólne cele.
+PaceUp jest projektowany tak, żeby progres użytkownika był wiarygodny:
 
-## Tech Stack
+- unikalne `actionId` dla akcji nagradzanych XP,
+- rejestr ukończonych akcji,
+- ochrona przed wielokrotnym naliczaniem XP,
+- event log XP,
+- okresowe questy dzienne i tygodniowe,
+- fallback w trybie mock/local state.
 
-Realny stack z `package.json`:
+## Stack Technologiczny
 
-- **React 19**
-- **TypeScript 5**
-- **Vite 6**
-- **lucide-react**
-- **ESLint 9**
-- **GitHub Actions**
-- **GitHub Pages**
+Repozytorium jest zbudowane na:
 
-Nie ma jeszcze w kodzie:
+- React 19
+- TypeScript 5
+- Vite 6
+- lucide-react
+- ESLint 9
+- GitHub Actions
 
-- Tailwind CSS,
-- Framer Motion,
-- Supabase client,
-- migracji bazy danych,
-- testów automatycznych,
-- PWA / Capacitor.
+Kierunek rozwoju warstwy produktowej obejmuje:
 
-Te elementy są dobrymi kandydatami na kolejne etapy.
+- Supabase/Bolt Database,
+- animacje w stylu Framer Motion,
+- fallback mock/localStorage,
+- warstwa serwisów gotowa pod backend.
 
-## Project Structure
+## Struktura Repozytorium
 
 ```text
 .
@@ -173,87 +296,7 @@ Te elementy są dobrymi kandydatami na kolejne etapy.
 `-- vite.config.ts
 ```
 
-## Main Screens
-
-Obecnie w kodzie istnieje jeden główny ekran startowy:
-
-- hero z komunikatem produktu,
-- panel target pace dla celu 10K,
-- karty metryk: tempo, tygodniowy dystans, trening tempo, najbliższy plan,
-- sekcja initial product scope.
-
-Docelowe ekrany aplikacji:
-
-- onboarding,
-- logowanie i rejestracja,
-- start / dashboard użytkownika,
-- solo progress,
-- aktywności grupowe,
-- szczegóły aktywności,
-- ekipy,
-- wydarzenia,
-- plany treningowe,
-- dziennik aktywności,
-- analityka,
-- profil,
-- ustawienia.
-
-## Activity Types
-
-Docelowo PaceUp rozróżnia dane w zależności od typu aktywności:
-
-| Typ | Dane |
-| --- | --- |
-| Bieganie | dystans, czas, tempo |
-| Spacer | czas, opcjonalny dystans |
-| Rower | dystans, czas, średnia prędkość |
-| Trekking | dystans, czas, przewyższenia, trudność |
-| Siłownia | ćwiczenia, serie, powtórzenia, ciężar, RPE, objętość |
-| Social / kawa | miejsce, godzina, opis, liczba osób |
-
-## Gamification System
-
-System gamifikacji jest planowaną osią produktu:
-
-- XP za aktywności,
-- poziomy użytkownika,
-- streak / seria,
-- questy dzienne, tygodniowe, eventowe i solo,
-- odznaki za konsekwencję,
-- rarity odznak,
-- level-up modal,
-- animacje nagród.
-
-## Training Plans & Analytics
-
-Docelowa analityka:
-
-- tygodniowe i miesięczne statystyki,
-- liczba kilometrów,
-- minuty ruchu,
-- treningi siłowe,
-- objętość treningowa,
-- XP,
-- seria,
-- ulubiony typ aktywności,
-- progres planu,
-- porównanie target pace vs realne tempo.
-
-## Backend / Data Layer
-
-Projekt jest przygotowywany pod przyszłą warstwę danych, ale obecnie nie zawiera jeszcze produkcyjnego backendu.
-
-Planowana architektura:
-
-- **mock mode** dla szybkiego prototypowania,
-- **Supabase / Bolt Database mode** dla danych produkcyjnych,
-- service layer oddzielający UI od bazy,
-- typy bazodanowe,
-- migracje,
-- RLS policies,
-- env variables przez `.env.example`.
-
-## Getting Started
+## Uruchomienie Lokalnie
 
 Wymagania:
 
@@ -266,10 +309,17 @@ Instalacja:
 npm install
 ```
 
-Development:
+Tryb development:
 
 ```bash
 npm run dev
+```
+
+Kontrola jakości:
+
+```bash
+npm run typecheck
+npm run lint
 ```
 
 Build produkcyjny:
@@ -278,82 +328,112 @@ Build produkcyjny:
 npm run build
 ```
 
-Quality checks:
-
-```bash
-npm run typecheck
-npm run lint
-```
-
-Preview buildu:
+Podgląd buildu:
 
 ```bash
 npm run preview
 ```
 
-## Environment Variables
+## Zmienne Środowiskowe
 
-Aktualny plik `.env.example`:
+Publiczny plik `.env.example`:
 
 ```env
 VITE_APP_NAME=PaceUP
 ```
 
-Planowane zmienne dla backendu:
+Repozytorium nie zawiera sekretów ani prywatnych kluczy. Wartości produkcyjne są zarządzane poza kodem aplikacji.
 
-```env
-VITE_SUPABASE_URL=
-VITE_SUPABASE_ANON_KEY=
-VITE_DATA_MODE=mock
-```
+## Status Projektu
 
-## Current Status
+PaceUp jest aktywnie rozwijanym MVP aplikacji sportowo-społecznościowej. Publiczny opis koncentruje się na kierunku produktu, najważniejszych modułach i jakości architektury.
 
-PaceUp jest w fazie aktywnego rozwoju.
+### Obecny Zakres
 
-Aktualnie gotowe:
-
-- frontend foundation,
-- podstawowy ekran landing/dashboard,
-- logika obliczania tempa,
-- dokumentacja repo,
-- CI,
-- GitHub Pages workflow.
-
-W trakcie / planowane:
-
-- auth,
-- onboarding,
-- profil użytkownika,
-- aktywności solo,
-- aktywności grupowe,
-- questy,
-- XP i poziomy,
-- odznaki,
+- doświadczenie mobile-first,
+- logowanie i onboarding,
+- ekran startowy,
+- aktywności solo i grupowe,
+- typy aktywności,
+- dane treningu siłowego,
+- XP, questy i odznaki,
+- historia i analityka,
 - ekipy,
-- wydarzenia lokalne,
-- Supabase/Bolt Database,
-- RLS policies,
-- testy QA.
+- lokalne wydarzenia,
+- profil i ustawienia,
+- koncepcje persystencji pod Supabase/Bolt.
 
-## Roadmap
+### Rozwijane Obszary
 
-- [ ] Pełny dashboard użytkownika
-- [ ] Solo activity flow
-- [ ] Formularze dla różnych typów aktywności
-- [ ] Trening siłowy z objętością
-- [ ] Questy i XP
-- [ ] Odznaki i level-up modal
-- [ ] Ekipy i aktywności grupowe
-- [ ] GPS tracking
-- [ ] Mapa trasy
-- [ ] Integracja Supabase / Bolt Database
-- [ ] PWA
-- [ ] Aplikacja mobilna przez Capacitor
-- [ ] Testy QA
-- [ ] Performance optimization
+- przenoszenie kolejnych danych do warstwy bazodanowej,
+- stabilizacja synchronizacji profilu,
+- wiarygodne naliczanie XP i progresu questów,
+- QA mobile,
+- stany błędów, puste stany i obsługa przypadków brzegowych.
 
-## License
+### Kolejne Kierunki
+
+- GPS tracking,
+- live route tracking,
+- mapa trasy po treningu,
+- richer race mode,
+- offline-first sync,
+- powiadomienia push,
+- PWA support,
+- Capacitor mobile wrapper,
+- automatyczne testy,
+- monitoring produkcyjny,
+- panel administracyjny i moderacja.
+
+## Roadmapa
+
+### Etap 1 - Stabilizacja Produktu
+
+- QA wszystkich głównych flow,
+- audyt przycisków i akcji,
+- stabilizacja synchronizacji profilu,
+- puste stany, loadingi i błędy,
+- performance pass na mobile.
+
+### Etap 2 - GPS i Mapy
+
+- geolokalizacja,
+- tracking aktywności na żywo,
+- pause/resume,
+- podsumowanie trasy,
+- mapa po treningu.
+
+### Etap 3 - Mobile Release
+
+- PWA support,
+- Capacitor wrapper,
+- Android build,
+- iOS build,
+- ikony aplikacji,
+- splash screeny.
+
+### Etap 4 - Social i Eventy
+
+- real-time chat,
+- grupy eventowe,
+- publiczne ekipy,
+- narzędzia moderacji,
+- bezpieczniejsze flow społecznościowe.
+
+### Etap 5 - Produkcyjny Backend
+
+- pełna persystencja w bazie,
+- dopracowanie RLS policies,
+- offline sync,
+- powiadomienia push,
+- monitoring,
+- analityka produktowa.
+
+## Materiały Wizualne
+
+Screenshoty i product walkthrough będą uzupełniane wraz z rozwojem interfejsu.
+
+## Licencja
 
 MIT License. Zobacz [LICENSE](LICENSE).
 
